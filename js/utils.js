@@ -116,6 +116,8 @@ function renderCell(location, value) {
   var elCell = document.getElementById(`${cellId}`);
   elCell.innerHTML = value;
   elCell.style.backgroundColor = (value===MINE) ? 'red' : 'lightblue'
+
+  gBoard[location.i][location.j].isShown = true
 }
 
 function playSound(sound) {

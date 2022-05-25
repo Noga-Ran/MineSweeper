@@ -26,6 +26,8 @@ var gGame = {
 function initGame() {
     
     clearGame()
+    var elGamer = document.querySelector(`.gamer`)
+    elGamer.innerHTML = ALIVE
 
     gBoard = buildBoard(gLevel.SIZE)
     renderBoard(gBoard)
@@ -35,15 +37,17 @@ function initGame() {
 function gameOver() {
     gGame.isOn=false
     console.log('Game Over');
-    initGame()
+    clearGame()
 }
 
 function cellClicked(cellHtml,i,j) {
+
+    if(!gIsTimeStarted && gBoard[i][j].isMime) {
+        initGame()
+    }
     if(gGame.isOn && !gBoard[i][j].isMarked) {
 
         if(!gIsTimeStarted) {
-            gStartTime = Date.now()
-            gIsTimeStarted = true
             openTimer()
         }
         var cellId = [i,j]
@@ -56,9 +60,11 @@ function cellClicked(cellHtml,i,j) {
             elGamer.innerHTML = DEAD
             gGame.isOn = false
             gameOver();
+
         } else if(gBoard[i][j].mimesAroundCount===0){
             value=''
             gCellsShown++
+            revealNeigh(i,j)
         } else {
             value=gBoard[i][j].mimesAroundCount
             gCellsShown++
@@ -69,6 +75,7 @@ function cellClicked(cellHtml,i,j) {
 }
 
 function isWon(){
+    console.log(gCellsShown);
     if(gCellsShown===(gLevel.SIZE**2-gLevel.MINES)) {
         var elGamer= document.querySelector(`.gamer`)
         elGamer.innerHTML = VICTORIOUS
@@ -77,6 +84,9 @@ function isWon(){
 }
 
 function openTimer (){
+    //gStartTime = Date.now()
+    gIsTimeStarted = true
+    gStartTime = Date.now()
     gInterval = setInterval(startTimer,10)
 }
 
@@ -102,15 +112,16 @@ function setDifficulty(difficulty='easy') {
 
 function clearGame(){ //reset all vars
     clearInterval(gInterval)
-    gStartTime = Date.now()
+    //gStartTime = Date.now()
     gCellsShown = 0 
     gIsTimeStarted=false
-    var elGamer = document.querySelector(`.gamer`)
-    elGamer.innerHTML = ALIVE
 }
 
 function addFlag(i,j) {
-    //console.log(FLAG);
+    if(!gIsTimeStarted) {
+        openTimer()
+    }
+
     if(gBoard[i][j].isMarked) {
         removeFlag(i,j)
     } else {
@@ -122,4 +133,26 @@ function addFlag(i,j) {
 function removeFlag(i,j) {
     gBoard[i][j].isMarked = false
     renderCell({i,j},'')
+}
+
+function revealNeigh(i,j) {
+    var cellI = i
+    var cellJ = j
+
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= gBoard.length) continue;
+        
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+        //   if (i === cellI && j === cellJ) continue;
+          
+          if (j < 0 || j >= gBoard[i].length) continue;
+
+          if(!gBoard[i][j].isMime && !gBoard[i][j].isShown) {
+              var value = (gBoard[i][j].mimesAroundCount===0) ? '' : gBoard[i][j].mimesAroundCount
+              renderCell({i,j}, value)
+              gCellsShown++
+              console.log(gCellsShown);
+          }
+        }
+    }
 }
