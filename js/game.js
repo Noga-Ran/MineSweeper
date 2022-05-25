@@ -52,25 +52,28 @@ function cellClicked(cellHtml,i,j) {
         }
         var cellId = [i,j]
         var value;
-        gBoard[i][j].isShown = true
         
-        if(gBoard[i][j].isMime) {
-            value = MINE
-            var elGamer= document.querySelector(`.gamer`)
-            elGamer.innerHTML = DEAD
-            gGame.isOn = false
-            gameOver();
+        if(!gBoard[i][j].isShown) {
 
-        } else if(gBoard[i][j].mimesAroundCount===0){
-            value=''
-            gCellsShown++
-            revealNeigh(i,j)
-        } else {
-            value=gBoard[i][j].mimesAroundCount
-            gCellsShown++
+            if(gBoard[i][j].isMime) {
+                value = MINE
+                var elGamer= document.querySelector(`.gamer`)
+                elGamer.innerHTML = DEAD
+                gGame.isOn = false
+                gameOver();
+    
+            } else if(gBoard[i][j].mimesAroundCount===0){
+                value=''
+                revealNeigh(i,j)
+            } else {
+                value=gBoard[i][j].mimesAroundCount
+                gCellsShown++
+            }
+            isWon()
+            renderCell({i, j}, value)
+            gBoard[i][j].isShown = true
         }
-        isWon()
-        renderCell({i, j}, value)
+
     }
 }
 
