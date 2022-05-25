@@ -11,6 +11,7 @@ var gBoard;
 var gStartTime;
 var gInterval;
 var gCellsShown = 0;
+
 var gLevel = {
     SIZE: 4,
     MINES: 2
@@ -24,42 +25,36 @@ var gGame = {
 
 function initGame() {
     
-    clearInterval(gInterval)
-    gStartTime = Date.now()
-    gGame.isOn=true
-    gCellsShown = 0 
-    gIsTimeStarted=false
+    clearGame()
 
-    gBoard = buildBoard(4)
+    gBoard = buildBoard(gLevel.SIZE)
     renderBoard(gBoard)
-    var elGamer= document.querySelector(`.gamer`)
-    elGamer.innerHTML = ALIVE
+    gGame.isOn=true
 }
 
 function gameOver() {
-    clearInterval(gInterval)
-    var elTimer = document.querySelector('.timer')
-    elTimer.innerText = 0
-
+    gGame.isOn=false
     console.log('Game Over');
+    initGame()
 }
 
 function cellClicked(cellHtml,i,j) {
-    if(!gIsTimeStarted) {
-        gStartTime = Date.now()
-        gIsTimeStarted = true
-        openTimer()
-    }
-    var cellId = [i,j]
-    var value;
-    gBoard[i][j].isShown = true
-    
-    if(gGame.isOn) {
+    if(gGame.isOn && !gBoard[i][j].isMarked) {
+
+        if(!gIsTimeStarted) {
+            gStartTime = Date.now()
+            gIsTimeStarted = true
+            openTimer()
+        }
+        var cellId = [i,j]
+        var value;
+        gBoard[i][j].isShown = true
+        
         if(gBoard[i][j].isMime) {
-            value= MINE
+            value = MINE
             var elGamer= document.querySelector(`.gamer`)
             elGamer.innerHTML = DEAD
-            gGame.isOn= false
+            gGame.isOn = false
             gameOver();
         } else if(gBoard[i][j].mimesAroundCount===0){
             value=''
@@ -73,15 +68,58 @@ function cellClicked(cellHtml,i,j) {
     }
 }
 
-
 function isWon(){
     if(gCellsShown===(gLevel.SIZE**2-gLevel.MINES)) {
         var elGamer= document.querySelector(`.gamer`)
         elGamer.innerHTML = VICTORIOUS
-        gameOver()
+        gameOver();
     }
 }
 
 function openTimer (){
     gInterval = setInterval(startTimer,10)
+}
+
+function setDifficulty(difficulty='easy') {
+   
+    switch (difficulty) {
+        case 'easy':
+            gLevel.SIZE = 4;
+            gLevel.MINES = 2;
+            break;
+        case 'hard':
+            gLevel.SIZE = 8;
+            gLevel.MINES = 12;
+            break;
+        case 'extreme':
+            gLevel.SIZE = 12;
+            gLevel.MINES = 30;
+            break;
+    }
+
+    initGame()
+}
+
+function clearGame(){ //reset all vars
+    clearInterval(gInterval)
+    gStartTime = Date.now()
+    gCellsShown = 0 
+    gIsTimeStarted=false
+    var elGamer = document.querySelector(`.gamer`)
+    elGamer.innerHTML = ALIVE
+}
+
+function addFlag(i,j) {
+    //console.log(FLAG);
+    if(gBoard[i][j].isMarked) {
+        removeFlag(i,j)
+    } else {
+        gBoard[i][j].isMarked = true
+        renderCell({i,j},FLAG)
+    }
+}
+
+function removeFlag(i,j) {
+    gBoard[i][j].isMarked = false
+    renderCell({i,j},'')
 }
