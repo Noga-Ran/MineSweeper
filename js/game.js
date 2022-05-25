@@ -78,7 +78,6 @@ function cellClicked(cellHtml,i,j) {
 }
 
 function isWon(){
-    console.log(gCellsShown);
     if(gCellsShown===(gLevel.SIZE**2-gLevel.MINES)) {
         var elGamer= document.querySelector(`.gamer`)
         elGamer.innerHTML = VICTORIOUS
@@ -154,7 +153,6 @@ function revealNeigh(i,j) {
               var value = (gBoard[i][j].mimesAroundCount===0) ? '' : gBoard[i][j].mimesAroundCount
               renderCell({i,j}, value)
               gCellsShown++
-              console.log(gCellsShown);
           }
         }
     }
