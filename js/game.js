@@ -60,6 +60,7 @@ function cellClicked(cellHtml,i,j) {
                 var elGamer= document.querySelector(`.gamer`)
                 elGamer.innerHTML = DEAD
                 gGame.isOn = false
+                playSound('lose')
                 gameOver();
     
             } else if(gBoard[i][j].mimesAroundCount===0){
@@ -81,6 +82,7 @@ function isWon(){
     if(gCellsShown===(gLevel.SIZE**2-gLevel.MINES)) {
         var elGamer= document.querySelector(`.gamer`)
         elGamer.innerHTML = VICTORIOUS
+        playSound('win')
         gameOver();
     }
 }
