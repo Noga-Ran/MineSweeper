@@ -1,5 +1,3 @@
-localStorage.clear();
-
 'use strict'
 
 const MINE = '💣'
@@ -8,6 +6,7 @@ const ALIVE = '😄'
 const DEAD = '☠️'
 const VICTORIOUS = '🥳'
 const THINKING = '🤔'
+const HEART = '💗'
 
 var gIsTimeStarted=false
 var gBoard; 
@@ -33,21 +32,7 @@ var gGame = {
 function initGame() {
     
     clearGame()
-    var elGamer = document.querySelector(`.gamer`)
-    elGamer.innerHTML = ALIVE
-    var elHints = document.querySelector('.hints')
-    elHints.innerHTML='Hints:💡💡💡'
-
-    var elLives = document.querySelector('.lives')
-    gLives = (!gLives) ? 1 : gLives
-    elLives.innerHTML= (!gLives) ? `lives: 1` :`lives:${gLives}`
-    gLives = (gLives<0) ? (gLevel).LIFE : gLives
-    elLives.innerHTML= (!gLives) ? `lives: 1` :`lives:${gLives}`
-
-    var elFlags = document.querySelector('.flags')
-    gFlags = (!gFlags) ? 2 : gFlags
-    elFlags.innerHTML= (!gFlags) ? `lives: 1` :`Flags:${gFlags}`
-
+   
     gBoard = buildBoard(gLevel.SIZE)
     renderBoard(gBoard)
     gGame.isOn=true
@@ -55,15 +40,16 @@ function initGame() {
 
 function gameOver() {
     gGame.isOn=false
+    clearInterval(gInterval)
     console.log('Game Over');
-    clearGame()
 }
 
-function cellClicked(cellHtml,i,j) {
+function cellClicked(i,j) {
 
     if(!gIsTimeStarted && gBoard[i][j].isMime) {
         initGame()
     }
+
     if(gGame.isOn && !gBoard[i][j].isMarked) {
 
         if(!gIsTimeStarted) {
@@ -76,6 +62,7 @@ function cellClicked(cellHtml,i,j) {
 
             
             if(gBoard[i][j].isMime) {
+                console.log(gLives);
                 value = MINE
                 gLives--
 
@@ -88,10 +75,14 @@ function cellClicked(cellHtml,i,j) {
                     playSound('lose')
                     gameOver();
                 }
+
                 if(gLives>=0) {
-               var elLives = document.querySelector('.lives')
-                elLives.innerHTML=`lives:${gLives}` }
+                    var elLives = document.querySelector('.lives')
+                    var newHtml = returnParameters(gLives,HEART)
                 
+                    elLives.innerHTML=`lives:${newHtml}`
+                }
+            
             } else if(gBoard[i][j].mimesAroundCount===0){
                 value=''
                 revealNeigh(i,j)
@@ -107,6 +98,7 @@ function cellClicked(cellHtml,i,j) {
         
     }
 }
+
 
 function isWon(){
     if(gGame.shownCount===(gLevel.SIZE**2-gLevel.MINES)) {
@@ -159,11 +151,27 @@ function setDifficulty(difficulty='easy') {
 
 function clearGame(){ //reset all vars
     //gStartTime = Date.now()
+    var elGamer = document.querySelector(`.gamer`)
+    elGamer.innerHTML = ALIVE
+    var elHints = document.querySelector('.hints')
+    elHints.innerHTML='Hints:💡💡💡'
+
+    var elLives = document.querySelector('.lives')
+    gLives = (!gLives) ? 1 : gLives
+    var newHtml = returnParameters(gLives,HEART)
+    elLives.innerHTML= (!gLives) ? `lives: 1` :`lives:${newHtml}`
+    gLives = (gLives<0) ? (gLevel).LIFE : gLives
+    newHtml = returnParameters(gLives,HEART)
+    elLives.innerHTML= (!gLives) ? `lives: 1` :`lives:${newHtml}`
+
+    var elFlags = document.querySelector('.flags')
+    gFlags = (!gFlags) ? 2 : gFlags
+    elFlags.innerHTML= (!gFlags) ? `lives: 1` :`Flags:${FLAG}(${gFlags})`
+
     clearInterval(gInterval)
     gGame.markedCount = 0
     gGame.shownCount = 0
-    //var elLives = document.querySelector('.lives')
-    //elLives.innerHTML=`lives:${gLives}`
+    
     gIsTimeStarted=false
     gSafeClick = 3
     var elSafeClick = document.querySelector('.safeClick')
@@ -177,12 +185,14 @@ function addFlag(i,j) {
         openTimer()
     }
 
+    if(gBoard[i][j].isShown || !gGame.isOn) return
+
     if(gBoard[i][j].isMarked) {
         removeFlag(i,j)
         gGame.markedCount--
         var elFlags = document.querySelector('.flags')
         gFlags++
-        elFlags.innerHTML= `Flags:${gFlags}`
+        elFlags.innerHTML= `Flags:${FLAG}(${gFlags})`
 
     } else if(gGame.markedCount<gLevel.MINES) {
         gBoard[i][j].isMarked = true
@@ -190,7 +200,7 @@ function addFlag(i,j) {
         gGame.markedCount++
         var elFlags = document.querySelector('.flags')
         gFlags--
-        elFlags.innerHTML= `Flags:${gFlags}`
+        elFlags.innerHTML= `Flags:${FLAG}(${gFlags})`
     }
 }
 
@@ -208,7 +218,6 @@ function revealNeigh(i,j) {
         if (i < 0 || i >= gBoard.length) continue;
         
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-        //   if (i === cellI && j === cellJ) continue;
           
           if (j < 0 || j >= gBoard[i].length) continue;
 

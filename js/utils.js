@@ -1,21 +1,5 @@
 'use strict'
 
-function printMat(mat, selector) {
-  var strHTML = '<table border="0"><tbody>';
-  for (var i = 0; i < mat.length; i++) {
-    strHTML += '<tr>';
-    for (var j = 0; j < mat[0].length; j++) {
-      var cell = mat[i][j];
-      var className = 'cell cell-' + i + '-' + j;
-      strHTML += '<td class="' + className + '"> ' + cell + ' </td>'
-    }
-    strHTML += '</tr>'
-  }
-  strHTML += '</tbody></table>';
-  var elContainer = document.querySelector(selector);
-  elContainer.innerHTML = strHTML;
-}
-
 function buildBoard(boardSize) {
   var board = [];
     
@@ -91,7 +75,7 @@ function renderBoard(board) {
         for (var j = 0; j < board[0].length; j++) {
             var cell = board[i][j];
             var classId = [i,j]
-            strHTML += `<td onclick="cellClicked(this,${i} ,${j})" oncontextmenu="addFlag(${i} ,${j})" id="${classId}" ></td>`;
+            strHTML += `<td onclick="cellClicked(${i} ,${j})" oncontextmenu="addFlag(${i} ,${j})" id="${classId}" ></td>`;
         }
 
         strHTML += '</tr>';
@@ -126,15 +110,6 @@ function renderCell(location, value) {
 function playSound(sound) {
   var sound = new Audio(`sounds/${sound}.mp3`)
   sound.play()
-}
-
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
 }
 
 function getRandomCellIndex(board) {
@@ -206,9 +181,9 @@ function saveScore() {
   
 }
 
-function safeClick(innerHtml) {
+function safeClick() {
 
-  if(!gSafeClick) return
+  if(!gSafeClick || !gGame.isOn) return
 
   var randomSafeIndex = getRandomCellIndex(gBoard)
   console.log(randomSafeIndex);
@@ -228,4 +203,14 @@ function safeClick(innerHtml) {
   var elSafeClick = document.querySelector('.safeClick')
   elSafeClick.innerHTML = `safe click:<br>${gSafeClick} available`
 
+}
+
+function returnParameters(len,value) {
+
+  var values='';
+
+  for(var i=0; i<len; i++) {
+    values+=value
+  }
+  return values
 }
