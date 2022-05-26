@@ -7,7 +7,7 @@
     <title>MineSweeper</title>
     <link rel="stylesheet" href="css/game.css">
 </head>
-<body onload="initGame()">
+<body onload="initGame()" oncontextmenu="return false">
     
     <h1>Mine Sweeper</h1>
     
@@ -22,6 +22,7 @@
 
     <p class="lives">LIVES:3</p>
     <p class="flags">flags:2</p>
+    <p class="hints" onclick="giveHint(innerHTML)">Hints:</p>
 
     <p class="gamer" onclick="initGame()"></p>
     <table>

@@ -1,8 +1,8 @@
 
 body {
   background-image: url('bgImg1.jpeg');
-  background-repeat: no-repeat;
   background-size: cover;
+  background-repeat: no-repeat;
   background-color: aqua;
   text-align: center;
 }
@@ -38,6 +38,15 @@ body {
   margin-left: 100px;
 }
 
+.hints {
+  display: inline-block;
+  margin-left: 100px;
+  background-color: black;
+  color: yellow;
+  border: 2px solid yellow;
+  width: 120px;
+}
+
 
 table, th, td {
   margin: auto;
@@ -60,7 +69,7 @@ td:hover {
 }
 
 .footer{
-  
+
   margin-top: 10px;
   position:fixed;
   width: 100%;

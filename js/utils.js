@@ -109,8 +109,17 @@ function renderCell(location, value) {
   var elCell = document.getElementById(`${cellId}`);
   elCell.innerHTML = value;
   
+  if(gBoard[location.i][location.j].isMarked && value==='') {
+    elCell.style.backgroundColor='rgba(179, 176, 176, 0.765)'
+    return;
+  }
+
+  if(gBoard[location.i][location.j].isMime && value==='') {
+    elCell.style.backgroundColor='rgba(179, 176, 176, 0.765)'
+    return;
+  }
+
   elCell.style.backgroundColor = (value===FLAG) ? 'rgba(179, 176, 176, 0.765)' : 'lightblue'
-  elCell.style.backgroundColor = (gBoard[location.i][location.j].isMarked) ? 'rgba(179, 176, 176, 0.765)' : 'lightblue'
   elCell.style.backgroundColor = (value===MINE) ? 'red' : 'lightblue'
 }
 

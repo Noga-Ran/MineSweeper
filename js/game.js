@@ -5,6 +5,7 @@ const FLAG = '🚩'
 const ALIVE = '😄'
 const DEAD = '☠️'
 const VICTORIOUS = '🥳'
+const THINKING = '🤔'
 
 var gIsTimeStarted=false
 var gBoard; 
@@ -15,8 +16,9 @@ var gFlags;
 
 var gLevel = {
     SIZE: 4,
-    MINES: 2
+    MINES: 2,
 }
+
 var gGame = {
     isOn: true,
     shownCount: 0,
@@ -70,6 +72,7 @@ function cellClicked(cellHtml,i,j) {
                 gLives--
 
                 if(gLives<0) {
+                    revealAllMines()
                     renderCell({i, j}, value)
                     var elGamer= document.querySelector(`.gamer`)
                     elGamer.innerHTML = DEAD
@@ -147,6 +150,8 @@ function clearGame(){ //reset all vars
     //var elLives = document.querySelector('.lives')
     //elLives.innerHTML=`lives:${gLives}`
     gIsTimeStarted=false
+    var elHints = document.querySelector('.hints')
+    elHints.innerHTML='Hints:💡💡💡'
 }
 
 function addFlag(i,j) {
@@ -197,4 +202,42 @@ function revealNeigh(i,j) {
           }
         }
     }
+}
+
+function revealAllMines() {
+    var minesLocations = findMimes(gBoard)
+
+    for(var k=0; k<minesLocations.length; k++) {
+        var currentMineLocation = minesLocations[k]
+        renderCell(currentMineLocation, MINE)
+    }
+}
+
+function giveHint(hintHtml) {
+    if(!gGame.isOn) return
+    
+    if(hintHtml!=='Hints:') {
+        var elGamer = document.querySelector(`.gamer`)
+        elGamer.innerHTML = THINKING
+        revealAllMines()
+
+        setTimeout(unRevealMines,500)
+    }
+
+    var elHints = document.querySelector('.hints')
+    var newHTML = elHints.innerHTML.replace('💡', '')
+    elHints.innerHTML = newHTML
+
+}
+
+function unRevealMines() {
+    var minesLocations = findMimes(gBoard)
+    for(var k=0; k<minesLocations.length; k++) {
+        var currentMineLocation = minesLocations[k]
+        if(gBoard[currentMineLocation.i][currentMineLocation.j].isShown) continue;
+        renderCell(currentMineLocation, '')
+    }
+
+    var elGamer = document.querySelector(`.gamer`)
+    elGamer.innerHTML = ALIVE
 }
