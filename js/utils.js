@@ -104,20 +104,14 @@ function renderBoard(board) {
 // location such as: {i: 2, j: 7}
 function renderCell(location, value) {
   // Select the elCell and set the value
-  if(!gGame.isOn) {
-    var cellId = [location.i,location.j]
-    var elCell = document.getElementById(`${cellId}`);
-    elCell.innerHTML = value;
-    elCell.style.backgroundColor = 'grey'
-    return;
-  }
   
   var cellId = [location.i,location.j]
   var elCell = document.getElementById(`${cellId}`);
   elCell.innerHTML = value;
+  
+  elCell.style.backgroundColor = (value===FLAG) ? 'rgba(179, 176, 176, 0.765)' : 'lightblue'
+  elCell.style.backgroundColor = (gBoard[location.i][location.j].isMarked) ? 'rgba(179, 176, 176, 0.765)' : 'lightblue'
   elCell.style.backgroundColor = (value===MINE) ? 'red' : 'lightblue'
-
-  gBoard[location.i][location.j].isShown = true
 }
 
 function playSound(sound) {
@@ -153,7 +147,6 @@ function getRandomCellIndex(board) {
   
   return {i:randomI ,j:randomJ}
 }
-
 
 function startTimer() {
   setTimeout(updateTime, 80)

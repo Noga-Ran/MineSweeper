@@ -1,5 +1,8 @@
 
 body {
+  background-image: url('bgImg1.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
   background-color: aqua;
   text-align: center;
 }
@@ -20,9 +23,21 @@ body {
   
 }
 
-.parent:first-child,.parent:last-child{
+.parent{
+  padding-top: 10px;
   display: inline-flex;
 }
+
+.lives, .flags {
+  color: green;
+  background-color: black;
+  border: 2px green solid;
+  text-decoration: underline overline dashed;
+  width: 90px;
+  display: inline-block;
+  margin-left: 100px;
+}
+
 
 table, th, td {
   margin: auto;
@@ -45,7 +60,9 @@ td:hover {
 }
 
 .footer{
-  position: fixed;
+  
+  margin-top: 10px;
+  position:fixed;
   width: 100%;
   bottom: 0;
   background-color: beige;

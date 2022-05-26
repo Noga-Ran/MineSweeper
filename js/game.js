@@ -10,7 +10,8 @@ var gIsTimeStarted=false
 var gBoard; 
 var gStartTime;
 var gInterval;
-var gCellsShown = 0;
+var gLives;
+var gFlags;
 
 var gLevel = {
     SIZE: 4,
@@ -28,6 +29,14 @@ function initGame() {
     clearGame()
     var elGamer = document.querySelector(`.gamer`)
     elGamer.innerHTML = ALIVE
+
+    var elLives = document.querySelector('.lives')
+    gLives = (!gLives) ? 1 : gLives
+    elLives.innerHTML= (!gLives) ? `lives: 1` :`lives:${gLives}`
+
+    var elFlags = document.querySelector('.flags')
+    gFlags = (!gFlags) ? 2 : gFlags
+    elFlags.innerHTML= (!gFlags) ? `lives: 1` :`Flags:${gFlags}`
 
     gBoard = buildBoard(gLevel.SIZE)
     renderBoard(gBoard)
@@ -50,36 +59,46 @@ function cellClicked(cellHtml,i,j) {
         if(!gIsTimeStarted) {
             openTimer()
         }
-        var cellId = [i,j]
+        
         var value;
         
         if(!gBoard[i][j].isShown) {
 
+            
             if(gBoard[i][j].isMime) {
                 value = MINE
-                var elGamer= document.querySelector(`.gamer`)
-                elGamer.innerHTML = DEAD
-                gGame.isOn = false
-                playSound('lose')
-                gameOver();
-    
+                gLives--
+
+                if(gLives<0) {
+                    renderCell({i, j}, value)
+                    var elGamer= document.querySelector(`.gamer`)
+                    elGamer.innerHTML = DEAD
+                    gGame.isOn = false
+                    playSound('lose')
+                    gameOver();
+                }
+                if(gLives>=0) {
+               var elLives = document.querySelector('.lives')
+                elLives.innerHTML=`lives:${gLives}` }
+                
             } else if(gBoard[i][j].mimesAroundCount===0){
                 value=''
                 revealNeigh(i,j)
             } else {
                 value=gBoard[i][j].mimesAroundCount
-                gCellsShown++
+                gGame.shownCount++
             }
-            isWon()
-            renderCell({i, j}, value)
             gBoard[i][j].isShown = true
-        }
 
+            renderCell({i, j}, value)
+            isWon()
+        }
+        
     }
 }
 
 function isWon(){
-    if(gCellsShown===(gLevel.SIZE**2-gLevel.MINES)) {
+    if(gGame.shownCount===(gLevel.SIZE**2-gLevel.MINES)) {
         var elGamer= document.querySelector(`.gamer`)
         elGamer.innerHTML = VICTORIOUS
         playSound('win')
@@ -100,14 +119,20 @@ function setDifficulty(difficulty='easy') {
         case 'easy':
             gLevel.SIZE = 4;
             gLevel.MINES = 2;
+            gLives = 1;
+            gFlags=2;
             break;
         case 'hard':
             gLevel.SIZE = 8;
             gLevel.MINES = 12;
+            gLives = 3;
+            gFlags = 12;
             break;
         case 'extreme':
             gLevel.SIZE = 12;
             gLevel.MINES = 30;
+            gLives = 3;
+            gFlags = 30;
             break;
     }
 
@@ -117,7 +142,10 @@ function setDifficulty(difficulty='easy') {
 function clearGame(){ //reset all vars
     clearInterval(gInterval)
     //gStartTime = Date.now()
-    gCellsShown = 0 
+    gGame.markedCount = 0
+    gGame.shownCount = 0
+    //var elLives = document.querySelector('.lives')
+    //elLives.innerHTML=`lives:${gLives}`
     gIsTimeStarted=false
 }
 
@@ -128,15 +156,25 @@ function addFlag(i,j) {
 
     if(gBoard[i][j].isMarked) {
         removeFlag(i,j)
-    } else {
+        gGame.markedCount--
+        var elFlags = document.querySelector('.flags')
+        gFlags++
+        elFlags.innerHTML= `Flags:${gFlags}`
+
+    } else if(gGame.markedCount<gLevel.MINES) {
         gBoard[i][j].isMarked = true
         renderCell({i,j},FLAG)
+        gGame.markedCount++
+        var elFlags = document.querySelector('.flags')
+        gFlags--
+        elFlags.innerHTML= `Flags:${gFlags}`
     }
 }
 
 function removeFlag(i,j) {
-    gBoard[i][j].isMarked = false
     renderCell({i,j},'')
+    gBoard[i][j].isMarked = false
+    gBoard[i][j].isShown=false
 }
 
 function revealNeigh(i,j) {
@@ -151,10 +189,11 @@ function revealNeigh(i,j) {
           
           if (j < 0 || j >= gBoard[i].length) continue;
 
-          if(!gBoard[i][j].isMime && !gBoard[i][j].isShown) {
+          if(!gBoard[i][j].isMime && !gBoard[i][j].isShown && !gBoard[i][j].isMarked) {
+              gBoard[i][j].isShown = true
               var value = (gBoard[i][j].mimesAroundCount===0) ? '' : gBoard[i][j].mimesAroundCount
               renderCell({i,j}, value)
-              gCellsShown++
+              gGame.shownCount++
           }
         }
     }
