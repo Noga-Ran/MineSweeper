@@ -1,9 +1,14 @@
 
-body {
+html {
+  min-height: 100%;
   background-image: url('bgImg1.jpeg');
-  background-size: cover;
   background-repeat: no-repeat;
-  background-color: aqua;
+  background-size: cover;
+}
+
+body {
+  
+  background-repeat: no-repeat;
   text-align: center;
 }
 
@@ -40,6 +45,7 @@ body {
 
 .hints {
   display: inline-block;
+  text-align: center;
   margin-left: 100px;
   background-color: black;
   color: yellow;
@@ -68,9 +74,14 @@ td:hover {
   border-color: yellow;
 }
 
-.footer{
+#result{
+  color: yellow;
+  background-color: rgba(0, 0, 0, 0.485);
+  font-size: large;
+  font-weight: bold;
+}
 
-  margin-top: 10px;
+.footer{
   position:fixed;
   width: 100%;
   bottom: 0;

@@ -167,4 +167,41 @@ function updateTime() {
   var secondsPast = diff / 1000
   var elTimer = document.querySelector('.timer')
   elTimer.innerText = secondsPast.toFixed(3)
+  gGame.secsPassed = elTimer.innerText;
+}
+
+function saveScore() {
+
+  var level;
+
+  switch(gLevel.SIZE) {
+
+    case 4:
+      level='easy'
+      break;
+    case 8:
+      level='hard'
+      break;
+    case 12:
+      level='extreme'
+      break;
+  }
+
+  if (typeof(Storage) !== 'undefined') {
+
+    if(localStorage.getItem(`fastest in level ${level}`)){
+      if(+(localStorage.getItem(`fastest in level ${level}`))>gGame.secsPassed) {
+
+        localStorage.setItem(`fastest in level ${level}`, gGame.secsPassed);
+        localStorage.removeItem(`fastest in level 4`)
+      }
+    } else {
+      localStorage.setItem(`fastest in level ${level}`, gGame.secsPassed);
+    }
+  document.getElementById("result").innerHTML = `the fastest in level '${level}' : `+localStorage.getItem(`fastest in level ${level}`);
+  
+  } else {
+    document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
+  }
+  
 }

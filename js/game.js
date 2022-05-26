@@ -1,3 +1,5 @@
+localStorage.clear();
+
 'use strict'
 
 const MINE = '💣'
@@ -17,6 +19,7 @@ var gFlags;
 var gLevel = {
     SIZE: 4,
     MINES: 2,
+    LIFE: 1
 }
 
 var gGame = {
@@ -31,9 +34,13 @@ function initGame() {
     clearGame()
     var elGamer = document.querySelector(`.gamer`)
     elGamer.innerHTML = ALIVE
+    var elHints = document.querySelector('.hints')
+    elHints.innerHTML='Hints:💡💡💡'
 
     var elLives = document.querySelector('.lives')
     gLives = (!gLives) ? 1 : gLives
+    elLives.innerHTML= (!gLives) ? `lives: 1` :`lives:${gLives}`
+    gLives = (gLives<0) ? (gLevel).LIFE : gLives
     elLives.innerHTML= (!gLives) ? `lives: 1` :`lives:${gLives}`
 
     var elFlags = document.querySelector('.flags')
@@ -102,6 +109,8 @@ function cellClicked(cellHtml,i,j) {
 
 function isWon(){
     if(gGame.shownCount===(gLevel.SIZE**2-gLevel.MINES)) {
+        clearInterval(gInterval)
+        saveScore()
         var elGamer= document.querySelector(`.gamer`)
         elGamer.innerHTML = VICTORIOUS
         playSound('win')
@@ -122,18 +131,23 @@ function setDifficulty(difficulty='easy') {
         case 'easy':
             gLevel.SIZE = 4;
             gLevel.MINES = 2;
+            gLevel.LIFE = 1;
+
             gLives = 1;
             gFlags=2;
             break;
         case 'hard':
             gLevel.SIZE = 8;
             gLevel.MINES = 12;
+            gLevel.LIFE = 3;
             gLives = 3;
             gFlags = 12;
             break;
         case 'extreme':
             gLevel.SIZE = 12;
             gLevel.MINES = 30;
+            gLevel.LIFE = 3;
+
             gLives = 3;
             gFlags = 30;
             break;
@@ -143,15 +157,14 @@ function setDifficulty(difficulty='easy') {
 }
 
 function clearGame(){ //reset all vars
-    clearInterval(gInterval)
     //gStartTime = Date.now()
     gGame.markedCount = 0
     gGame.shownCount = 0
     //var elLives = document.querySelector('.lives')
     //elLives.innerHTML=`lives:${gLives}`
     gIsTimeStarted=false
-    var elHints = document.querySelector('.hints')
-    elHints.innerHTML='Hints:💡💡💡'
+    var elTimer = document.querySelector('.timer')
+    elTimer=0
 }
 
 function addFlag(i,j) {
