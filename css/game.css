@@ -33,7 +33,7 @@ body {
   display: inline-flex;
 }
 
-.lives, .flags {
+.lives, .flags, .safeClick{
   color: green;
   background-color: black;
   border: 2px green solid;
@@ -51,6 +51,10 @@ body {
   color: yellow;
   border: 2px solid yellow;
   width: 120px;
+}
+
+.hints:hover {
+  cursor: help;
 }
 
 

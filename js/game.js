@@ -15,6 +15,7 @@ var gStartTime;
 var gInterval;
 var gLives;
 var gFlags;
+var gSafeClick;
 
 var gLevel = {
     SIZE: 4,
@@ -158,11 +159,15 @@ function setDifficulty(difficulty='easy') {
 
 function clearGame(){ //reset all vars
     //gStartTime = Date.now()
+    clearInterval(gInterval)
     gGame.markedCount = 0
     gGame.shownCount = 0
     //var elLives = document.querySelector('.lives')
     //elLives.innerHTML=`lives:${gLives}`
     gIsTimeStarted=false
+    gSafeClick = 3
+    var elSafeClick = document.querySelector('.safeClick')
+    elSafeClick.innerHTML = `safe click:<br>${gSafeClick} available`
     var elTimer = document.querySelector('.timer')
     elTimer=0
 }

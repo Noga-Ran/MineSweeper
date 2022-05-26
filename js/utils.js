@@ -144,7 +144,7 @@ function getRandomCellIndex(board) {
   for (var i = 0; i < board.length; i++) {
     for (var j = 0; j < board[0].length; j++) {
         var cell = board[i][j]
-        if(!cell.isMime) {
+        if(!cell.isMime && !cell.isShown) {
           emptyCells.push({i,j})
         }
       }
@@ -204,4 +204,28 @@ function saveScore() {
     document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
   }
   
+}
+
+function safeClick(innerHtml) {
+
+  if(!gSafeClick) return
+
+  var randomSafeIndex = getRandomCellIndex(gBoard)
+  console.log(randomSafeIndex);
+
+  var id = [randomSafeIndex.i,randomSafeIndex.j]
+  var elSafeIndex = document.getElementById(`${id}`)
+  
+  elSafeIndex.style.borderColor = 'purple';
+  elSafeIndex.style.backgroundColor = 'violet';
+
+  setTimeout(function(){
+    elSafeIndex.style.borderColor = 'black';
+    elSafeIndex.style.backgroundColor = 'rgba(179, 176, 176, 0.765)';
+  },1000)
+
+  gSafeClick--
+  var elSafeClick = document.querySelector('.safeClick')
+  elSafeClick.innerHTML = `safe click:<br>${gSafeClick} available`
+
 }
