@@ -99,7 +99,6 @@ function cellClicked(i,j) {
     }
 }
 
-
 function isWon(){
     if(gGame.shownCount===(gLevel.SIZE**2-gLevel.MINES)) {
         clearInterval(gInterval)
@@ -226,6 +225,11 @@ function revealNeigh(i,j) {
               var value = (gBoard[i][j].mimesAroundCount===0) ? '' : gBoard[i][j].mimesAroundCount
               renderCell({i,j}, value)
               gGame.shownCount++
+
+              if(!gBoard[i][j].mimesAroundCount) {
+
+                  revealNeigh(i,j)
+              }
           }
         }
     }
@@ -262,6 +266,10 @@ function unRevealMines() {
     for(var k=0; k<minesLocations.length; k++) {
         var currentMineLocation = minesLocations[k]
         if(gBoard[currentMineLocation.i][currentMineLocation.j].isShown) continue;
+        if(gBoard[currentMineLocation.i][currentMineLocation.j].isMarked) {
+            renderCell(currentMineLocation, FLAG)
+            continue;
+        }
         renderCell(currentMineLocation, '')
     }
 
