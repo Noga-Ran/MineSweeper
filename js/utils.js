@@ -15,17 +15,38 @@ function buildBoard(boardSize) {
       }
     }
 
-  addMine(board)
-
-  setMinesNegsCount(board)
+  if(!gLevel.isMenually) {
+    addMines(board)
+    setMinesNegsCount(board)
+  }
     
   return board;
 }
 
-function addMine(board) {
-  for(var i=0; i<gLevel.MINES; i++) {
-    var index = getRandomCellIndex(board)
-    board[index.i][index.j].isMime = true
+function addMines(board,loaction) {
+
+  if(gLevel.isMenually) {
+    board[loaction.i][loaction.j].isMime = true
+    return
+  }
+  if(!gLevel.isSevenBoom) {
+    for(var i=0; i<gLevel.MINES; i++) {
+      var index = getRandomCellIndex(board)
+      board[index.i][index.j].isMime = true
+    }
+  }
+  else {
+    for(var k=0; k<gLevel.MINES; k++) {
+      for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[0].length; j++) {
+            var cell = board[i][j]
+            if(!cell.isMime && !cell.isShown && (i%7===0&&i || j%7===0&&j)) {
+              console.log(i,j);
+              cell.isMime=true
+            }
+          }
+      }
+    }
   }
 }
 
@@ -147,20 +168,7 @@ function updateTime() {
 
 function saveScore() {
 
-  var level;
-
-  switch(gLevel.SIZE) {
-
-    case 4:
-      level='easy'
-      break;
-    case 8:
-      level='hard'
-      break;
-    case 12:
-      level='extreme'
-      break;
-  }
+  var level = gLevel.levelName;
 
   if (typeof(Storage) !== 'undefined') {
 
@@ -183,7 +191,7 @@ function saveScore() {
 
 function safeClick() {
 
-  if(!gSafeClick || !gGame.isOn) return
+  if(!gSafeClick || !gGame.isOn || gLevel.isMenually) return
 
   var randomSafeIndex = getRandomCellIndex(gBoard)
   console.log(randomSafeIndex);

@@ -15,11 +15,15 @@ var gInterval;
 var gLives;
 var gFlags;
 var gSafeClick;
+var gMineCount=0;
 
 var gLevel = {
     SIZE: 4,
     MINES: 2,
-    LIFE: 1
+    LIFE: 1,
+    isSevenBoom: false,
+    isMenually: false,
+    levelName: '',
 }
 
 var gGame = {
@@ -46,6 +50,17 @@ function gameOver() {
 
 function cellClicked(i,j) {
 
+    if(gLevel.isMenually) {
+        if(gMineCount<gLevel.MINES){
+            console.log(gLevel.MINES,gMineCount);
+            addMines(gBoard,{i,j})
+            gMineCount++
+        } else {
+            setMinesNegsCount(gBoard)
+            gLevel.isMenually = false;
+        }
+        return
+    }
     if(!gIsTimeStarted && gBoard[i][j].isMime) {
         initGame()
     }
@@ -118,7 +133,8 @@ function openTimer (){
 }
 
 function setDifficulty(difficulty='easy') {
-   
+   gLevel.levelName=difficulty;
+
     switch (difficulty) {
         case 'easy':
             gLevel.SIZE = 4;
@@ -128,6 +144,7 @@ function setDifficulty(difficulty='easy') {
             gLives = 1;
             gFlags=2;
             break;
+
         case 'hard':
             gLevel.SIZE = 8;
             gLevel.MINES = 12;
@@ -135,11 +152,31 @@ function setDifficulty(difficulty='easy') {
             gLives = 3;
             gFlags = 12;
             break;
+
         case 'extreme':
             gLevel.SIZE = 12;
             gLevel.MINES = 30;
             gLevel.LIFE = 3;
 
+            gLives = 3;
+            gFlags = 30;
+            break;
+
+        case 'menually':
+            console.log('menually');
+            gLevel.SIZE = 8;
+            gLevel.MINES = 12;
+            gLevel.LIFE = 3;
+            gLevel.isMenually = true
+            gLives = 3;
+            gFlags = 12;
+            break;
+
+            case 'sevenBoom':
+            gLevel.SIZE = 12;
+            gLevel.MINES = 30;
+            gLevel.LIFE = 3;
+            gLevel.isSevenBoom = true
             gLives = 3;
             gFlags = 30;
             break;
@@ -170,7 +207,8 @@ function clearGame(){ //reset all vars
     clearInterval(gInterval)
     gGame.markedCount = 0
     gGame.shownCount = 0
-    
+    gMineCount = 0;
+
     gIsTimeStarted=false
     gSafeClick = 3
     var elSafeClick = document.querySelector('.safeClick')
@@ -180,11 +218,12 @@ function clearGame(){ //reset all vars
 }
 
 function addFlag(i,j) {
+    
+    if(gBoard[i][j].isShown || !gGame.isOn || gLevel.isMenually) return
+    
     if(!gIsTimeStarted) {
         openTimer()
     }
-
-    if(gBoard[i][j].isShown || !gGame.isOn) return
 
     if(gBoard[i][j].isMarked) {
         removeFlag(i,j)
@@ -236,6 +275,7 @@ function revealNeigh(i,j) {
 }
 
 function revealAllMines() {
+    if(gLevel.isMenually) return
     var minesLocations = findMimes(gBoard)
 
     for(var k=0; k<minesLocations.length; k++) {
@@ -245,7 +285,7 @@ function revealAllMines() {
 }
 
 function giveHint(hintHtml) {
-    if(!gGame.isOn) return
+    if(!gGame.isOn || gLevel.isMenually) return
     
     if(hintHtml!=='Hints:') {
         var elGamer = document.querySelector(`.gamer`)
