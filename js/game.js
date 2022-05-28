@@ -165,12 +165,12 @@ function setDifficulty(difficulty='easy') {
                 
         case 'sevenBoom':
             gLevel.SIZE = 12;
-            gLevel.MINES = 23;
+            gLevel.MINES = 20;
             gLevel.LIFE = 3;
             gLevel.isMenually = false
             gLevel.isSevenBoom = true
             gLives = 3;
-            gFlags = 23;
+            gFlags = 20;
             break;
         }
                 
@@ -219,7 +219,7 @@ function clearGame(){ //reset all vars
 
 function isWon(){ //checks winning. stop game if true.
     
-    if(gGame.shownCount===(gLevel.SIZE**2-gLevel.MINES)) { //is won if cell shown number equal to the cells without mines number
+    if(gGame.shownCount>=(gLevel.SIZE**2-gLevel.MINES)) { //is won if cell shown number equal to the cells without mines number
         clearInterval(gInterval) 
         gGame.isOn=false
         
