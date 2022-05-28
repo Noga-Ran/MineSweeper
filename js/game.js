@@ -180,6 +180,7 @@ function clearGame(){ //reset all vars
 
     //gLevel.isMenually= false
     //gStartTime = Date.now()
+    
     gPressManually = 0
     var elGamer = document.querySelector(`.gamer`)
     elGamer.innerHTML = ALIVE

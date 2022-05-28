@@ -1,6 +1,6 @@
 'use strict'
 
-function buildBoard(boardSize) {
+function buildBoard(boardSize) { //build board with resae values
   var board = [];
     
   for (var i = 0; i < boardSize; i++) {
@@ -15,7 +15,7 @@ function buildBoard(boardSize) {
       }
     }
 
-  if(!gLevel.isMenually) {
+  if(!gLevel.isMenually) { // add and count mines if user didn't choose 'Menually'
     addMines(board)
     setMinesNegsCount(board)
   }
@@ -26,17 +26,17 @@ function buildBoard(boardSize) {
 function addMines(board,loaction) {
 
   if(gLevel.isMenually) {
-    board[loaction.i][loaction.j].isMime = true
+    board[loaction.i][loaction.j].isMime = true //if user choose 'menually', mines will added according to choosen location
     return
   }
   
-  if(!gLevel.isSevenBoom) {
+  if(!gLevel.isSevenBoom) { //if level is not sevenBoom, mines will be enter randomly
     for(var i=0; i<gLevel.MINES; i++) {
       var index = getRandomCellIndex(board)
       board[index.i][index.j].isMime = true
     }
   }
-  else {
+  else { //every cell that have a number that divided by seven, will be mine
     for(var k=0; k<gLevel.MINES; k++) {
       for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[0].length; j++) {
@@ -54,7 +54,7 @@ function setMinesNegsCount(board) {
 
   var mimesLoaction = findMimes(board)
   
-  for(var k=0; k<mimesLoaction.length ; k++) {
+  for(var k=0; k<mimesLoaction.length ; k++) {  //run on the neighbors of every mine and add one to their mine count
   var cellI = mimesLoaction[k].i
   var cellJ = mimesLoaction[k].j
     
@@ -72,7 +72,7 @@ function setMinesNegsCount(board) {
     }
 }
 
-function findMimes(board) {
+function findMimes(board) { //find all the mines in the board
 
   var mimesLoaction = []
 
@@ -113,9 +113,8 @@ function renderCell(location, value) {
   var cellId = [location.i,location.j]
   var elCell = document.getElementById(`${cellId}`);
   elCell.innerHTML = value;
-  var elGamer = document.querySelector(`.gamer`)
 
-  if(gBoard[location.i][location.j].isMarked && value==='') {
+  if(gBoard[location.i][location.j].isMarked && value==='') { 
     elCell.style.backgroundColor='rgba(179, 176, 176, 0.765)'
     return;
   }
@@ -169,25 +168,24 @@ function saveScore() {
 
   if (typeof(Storage) !== 'undefined') {
 
-    if(localStorage.getItem(`fastest in level ${level}`)){
-      if(+(localStorage.getItem(`fastest in level ${level}`))>gGame.secsPassed) {
+    if(localStorage.getItem(`fastest in level ${level}`)){ //if the item exist
+
+      if(+(localStorage.getItem(`fastest in level ${level}`))>gGame.secsPassed) { //it the current time is faster then pervious one, enter
 
         localStorage.setItem(`fastest in level ${level}`, gGame.secsPassed);
         localStorage.removeItem(`fastest in level 4`)
       }
     } else {
-      localStorage.setItem(`fastest in level ${level}`, gGame.secsPassed);
+      localStorage.setItem(`fastest in level ${level}`, gGame.secsPassed); //if it not define, create
     }
   document.getElementById("result").innerHTML = `the fastest in level '${level}' : `+localStorage.getItem(`fastest in level ${level}`);
-  
   } else {
     document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
   }
   
 }
 
-
-function returnParameters(len,value) {
+function returnParameters(len,value) { 
 
   var values='';
 
