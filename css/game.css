@@ -80,7 +80,6 @@ th, td{
   text-overflow: clip;
 }
 
-
 td:hover {
   border-color: yellow;
 }
@@ -98,9 +97,9 @@ td:hover {
   bottom: 2px;
   background-color: beige;
   border: 2px rgb(234, 234, 111) solid;
-  height: 20px;
+  height: 10px;
   font-size: medium;
   display: flex;
   justify-content:center;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
 }
