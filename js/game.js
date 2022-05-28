@@ -169,12 +169,12 @@ function setDifficulty(difficulty='easy') {
                 
         case 'sevenBoom':
             gLevel.SIZE = 12;
-            gLevel.MINES = 20;
+            gLevel.MINES = 40;
             gLevel.LIFE = 3;
             gLevel.isMenually = false
             gLevel.isSevenBoom = true
             gLives = 3;
-            gFlags = 20;
+            gFlags = 40;
             break;
         }
                 
