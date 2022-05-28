@@ -71,30 +71,29 @@ function cellClicked(i,j) {
     
     var elGamer= document.querySelector(`.gamer`)
     
-    if(elGamer.innerHTML===THINKING) {
+    if(elGamer.innerHTML===THINKING) { //when give hint was pressed
         
         revealNeigh(i,j)
         setTimeout(function(){unRevealNeigs(gRevals)},1000)
-        elGamer.innerHTML=ALIVE
     }
     
-    if(gGame.isOn && !gBoard[i][j].isMarked) {
+    if(gGame.isOn && !gBoard[i][j].isMarked) {  //won't change cell if the gane is over/there is flag inside
         
         if(!gIsTimeStarted) {
-            openTimer()
+            openTimer() //open timer in the first click
         }
         
         var value;
         
-        if(!gBoard[i][j].isShown) {
+        if(!gBoard[i][j].isShown) { //don't chanage is cell is shown
             
             
-            if(gBoard[i][j].isMime) {
+            if(gBoard[i][j].isMime) { 
                 
                 value = MINE
-                gLives--
+                gLives-- //remove one from the life that have been left
                 
-                if(gLives<0) {
+                if(gLives<0) { //if step on mine and have zero life 
                     revealAllMines()
                     renderCell({i, j}, value)
                     gameOver();
@@ -102,7 +101,7 @@ function cellClicked(i,j) {
                 
                 if(gLives>=0) {
                     var elLives = document.querySelector('.lives')
-                    var newHtml = returnParameters(gLives,HEART)
+                    var newHtml = returnParameters(gLives,HEART) //print to the user how many lives have benn left
                     
                     elLives.innerHTML=`lives:${newHtml}`
                 }
@@ -136,46 +135,45 @@ function setDifficulty(difficulty='easy') {
             gFlags=2;
             break;
             
-            case 'hard':
-                gLevel.SIZE = 8;
-                gLevel.MINES = 12;
-                gLevel.LIFE = 3;
-                gLevel.isMenually = false
-                gLives = 3;
-                gFlags = 12;
-                break;
+        case 'hard':
+            gLevel.SIZE = 8;
+            gLevel.MINES = 12;
+            gLevel.LIFE = 3;
+            gLevel.isMenually = false
+            gLives = 3;
+            gFlags = 12;
+            break;
                 
         case 'extreme':
             gLevel.SIZE = 12;
             gLevel.MINES = 30;
             gLevel.LIFE = 3;
             gLevel.isMenually = false
-            
             gLives = 3;
             gFlags = 30;
             break;
             
-            case 'menually':
-                gLevel.SIZE = 8;
-                gLevel.MINES = 12;
-                gLevel.LIFE = 3;
-                gLevel.isMenually = true
-                gLives = 3;
-                gFlags = 12;
-                break;
+        case 'menually':
+            gLevel.SIZE = 8;
+            gLevel.MINES = 12;
+            gLevel.LIFE = 3;
+            gLevel.isMenually = true
+            gLives = 3;
+            gFlags = 12;
+            break;
                 
-                case 'sevenBoom':
-                    gLevel.SIZE = 12;
-                    gLevel.MINES = 23;
-                    gLevel.LIFE = 3;
-                    gLevel.isMenually = false
-                    gLevel.isSevenBoom = true
-                    gLives = 3;
-                    gFlags = 23;
-                    break;
-                }
+        case 'sevenBoom':
+            gLevel.SIZE = 12;
+            gLevel.MINES = 23;
+            gLevel.LIFE = 3;
+            gLevel.isMenually = false
+            gLevel.isSevenBoom = true
+            gLives = 3;
+            gFlags = 23;
+            break;
+        }
                 
-                initGame()
+    initGame()
 }
             
 function clearGame(){ //reset all vars
@@ -278,6 +276,7 @@ function revealNeigh(i,j) {
     var cellJ = j
     
     var elGamer = document.querySelector(`.gamer`)
+    console.log(elGamer.innerHTML);
     
     for (var i = cellI - 1; i <= cellI + 1; i++) { //run on the neighbors of the cell
         if (i < 0 || i >= gBoard.length) continue;
@@ -310,7 +309,7 @@ function revealNeigh(i,j) {
                 renderCell({i,j}, value)
                 gGame.shownCount++
                 
-                if(!gBoard[i][j].mimesAroundCount && elGamer.innerHTML!==THINKING) { //recursion the function if the cell is empty and the user didn't asked for a hint
+                if(!gBoard[i][j].mimesAroundCount && elGamer.innerHTML===ALIVE) { //recursion the function if the cell is empty and the user didn't asked for a hint
                     revealNeigh(i,j)
                 }
             }
@@ -327,7 +326,7 @@ function unRevealNeigs(revals) { //gets the neighbors that was reavels when 'hin
       if(!gBoard[cellI][cellJ].isShown) { //doesn't unreavel cell that was shown already when 'hint' as preesed
         if(gBoard[cellI][cellJ].isMarked) { 
           renderCell({i: cellI,j:cellJ}, FLAG)
-          continue;
+          continue
       }
       renderCell({i: cellI,j:cellJ}, '')
       var cellId = [cellI,cellJ]
@@ -335,9 +334,13 @@ function unRevealNeigs(revals) { //gets the neighbors that was reavels when 'hin
       elCell.style.backgroundColor='rgba(179, 176, 176, 0.765)'
       }
     }
+
+    var elGamer = document.querySelector(`.gamer`)
+    elGamer.innerHTML = ALIVE
 }
 
 function giveHint(hintHtml) {
+    
     if(!gGame.isOn || gLevel.isMenually) return
     
     if(hintHtml!=='Hints:') {
@@ -351,29 +354,22 @@ function giveHint(hintHtml) {
     
 }
 
-function closeHint(){
-    var elGamer = document.querySelector(`.gamer`)
-    elGamer.innerHTML = ALIVE
-}
+function safeClick() { //get random cell that is not a mine
 
-function safeClick() {
-
-    if(!gSafeClick || !gGame.isOn || gLevel.isMenually) return
+    if(!gSafeClick || !gGame.isOn || gLevel.isMenually) return //if there not any safe click left/game is of/user placing mine = return
   
     var randomSafeIndex = getRandomCellIndex(gBoard)
   
-    var id = [randomSafeIndex.i,randomSafeIndex.j]
-    var elSafeIndex = document.getElementById(`${id}`)
+    var id = [randomSafeIndex.i,randomSafeIndex.j] 
+    var elSafeIndex = document.getElementById(`${id}`) 
     
-    elSafeIndex.style.borderColor = 'purple';
+    elSafeIndex.style.borderColor = 'purple'; 
     elSafeIndex.style.backgroundColor = 'violet';
   
-    var interval = setTimeout(function(){
+    setTimeout(function(){
       elSafeIndex.style.borderColor = 'black';
       elSafeIndex.style.backgroundColor = 'rgba(179, 176, 176, 0.765)';
     },1000)
-  
-    clearTimeout(interval)
     
   
     gSafeClick--

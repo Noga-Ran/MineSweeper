@@ -115,7 +115,7 @@ function renderCell(location, value) {
   elCell.innerHTML = value;
   var elGamer = document.querySelector(`.gamer`)
 
-  if((gBoard[location.i][location.j].isMarked || elGamer.innerHTML===THINKING) && value==='') {
+  if(gBoard[location.i][location.j].isMarked && value==='') {
     elCell.style.backgroundColor='rgba(179, 176, 176, 0.765)'
     return;
   }
@@ -185,6 +185,7 @@ function saveScore() {
   }
   
 }
+
 
 function returnParameters(len,value) {
 
