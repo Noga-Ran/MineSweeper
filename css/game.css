@@ -1,9 +1,15 @@
 
 html {
   min-height: 100%;
-  background-image: url('bgImg1.jpeg');
+  background-image: url('bgImg.jpeg');
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+h1 {
+  -webkit-text-fill-color: rgb(213, 4, 4);
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
 }
 
 body {

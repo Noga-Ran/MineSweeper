@@ -29,6 +29,7 @@ function addMines(board,loaction) {
     board[loaction.i][loaction.j].isMime = true
     return
   }
+  
   if(!gLevel.isSevenBoom) {
     for(var i=0; i<gLevel.MINES; i++) {
       var index = getRandomCellIndex(board)
@@ -41,7 +42,6 @@ function addMines(board,loaction) {
         for (var j = 0; j < board[0].length; j++) {
             var cell = board[i][j]
             if(!cell.isMime && !cell.isShown && (i%7===0&&i || j%7===0&&j)) {
-              console.log(i,j);
               cell.isMime=true
             }
           }
@@ -113,8 +113,9 @@ function renderCell(location, value) {
   var cellId = [location.i,location.j]
   var elCell = document.getElementById(`${cellId}`);
   elCell.innerHTML = value;
-  
-  if(gBoard[location.i][location.j].isMarked && value==='') {
+  var elGamer = document.querySelector(`.gamer`)
+
+  if((gBoard[location.i][location.j].isMarked || elGamer.innerHTML===THINKING) && value==='') {
     elCell.style.backgroundColor='rgba(179, 176, 176, 0.765)'
     return;
   }
@@ -126,11 +127,6 @@ function renderCell(location, value) {
 
   elCell.style.backgroundColor = (value===FLAG) ? 'rgba(179, 176, 176, 0.765)' : 'lightblue'
   elCell.style.backgroundColor = (value===MINE) ? 'red' : 'lightblue'
-}
-
-function playSound(sound) {
-  var sound = new Audio(`sounds/${sound}.mp3`)
-  sound.play()
 }
 
 function getRandomCellIndex(board) {
@@ -161,9 +157,10 @@ function updateTime() {
   var now = Date.now()
   var diff = now - gStartTime
   var secondsPast = diff / 1000
+
   var elTimer = document.querySelector('.timer')
-  elTimer.innerText = secondsPast.toFixed(3)
-  gGame.secsPassed = elTimer.innerText;
+  elTimer.innerHTML = secondsPast.toFixed(3)
+  gGame.secsPassed = elTimer.innerHTML;
 }
 
 function saveScore() {
@@ -189,30 +186,6 @@ function saveScore() {
   
 }
 
-function safeClick() {
-
-  if(!gSafeClick || !gGame.isOn || gLevel.isMenually) return
-
-  var randomSafeIndex = getRandomCellIndex(gBoard)
-  console.log(randomSafeIndex);
-
-  var id = [randomSafeIndex.i,randomSafeIndex.j]
-  var elSafeIndex = document.getElementById(`${id}`)
-  
-  elSafeIndex.style.borderColor = 'purple';
-  elSafeIndex.style.backgroundColor = 'violet';
-
-  setTimeout(function(){
-    elSafeIndex.style.borderColor = 'black';
-    elSafeIndex.style.backgroundColor = 'rgba(179, 176, 176, 0.765)';
-  },1000)
-
-  gSafeClick--
-  var elSafeClick = document.querySelector('.safeClick')
-  elSafeClick.innerHTML = `safe click:<br>${gSafeClick} available`
-
-}
-
 function returnParameters(len,value) {
 
   var values='';
@@ -221,4 +194,9 @@ function returnParameters(len,value) {
     values+=value
   }
   return values
+}
+
+function playSound(sound) { //this fuction gets name and play the file that have this name
+  var sound = new Audio(`sounds/${sound}.mp3`)
+  sound.play()
 }
