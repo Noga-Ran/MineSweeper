@@ -148,10 +148,6 @@ function getRandomCellIndex(board) {
   return {i:randomI ,j:randomJ}
 }
 
-function startTimer() {
-  setTimeout(updateTime, 80)
-}
-
 function updateTime() {
   var now = Date.now()
   var diff = now - gStartTime
@@ -165,7 +161,7 @@ function updateTime() {
 function saveScore() {
 
   var level = gLevel.levelName;
-
+  
   if (typeof(Storage) !== 'undefined') {
 
     if(localStorage.getItem(`fastest in level ${level}`)){ //if the item exist

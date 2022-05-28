@@ -17,7 +17,7 @@ var gFlags;
 var gSafeClick;
 var gMineCount=0;
 var gRevals = [];
-var gPressManually = 0 //maybe delete later
+var gPressManually = 0
 
 var gLevel = {
     SIZE: 4,
@@ -25,16 +25,15 @@ var gLevel = {
     LIFE: 1,
     isSevenBoom: false,
     isMenually: false,
-    levelName: '',
+    levelName: 'easy',
 }
 
 var gGame = {
     isOn: true,
     shownCount: 0,
     markedCount: 0,
-    secsPassed: 0
+    secsPassed: 0,
 }
-
 
 function initGame() { 
     
@@ -220,8 +219,8 @@ function isWon(){ //checks winning. stop game if true.
         clearInterval(gInterval) 
         gGame.isOn=false
         
-        var elTimer = document.querySelector('.timer')
-        gGame.secsPassed = elTimer.innerHTML;
+        // var elTimer = document.querySelector('.timer')
+        // gGame.secsPassed = elTimer.innerHTML;
         
         saveScore()
         
@@ -277,7 +276,7 @@ function revealNeigh(i,j) {
     var cellJ = j
     
     var elGamer = document.querySelector(`.gamer`)
-    console.log(elGamer.innerHTML);
+
     
     for (var i = cellI - 1; i <= cellI + 1; i++) { //run on the neighbors of the cell
         if (i < 0 || i >= gBoard.length) continue;
@@ -326,8 +325,8 @@ function unRevealNeigs(revals) { //gets the neighbors that was reavels when 'hin
   
       if(!gBoard[cellI][cellJ].isShown) { //doesn't unreavel cell that was shown already when 'hint' as preesed
         if(gBoard[cellI][cellJ].isMarked) { 
-          renderCell({i: cellI,j:cellJ}, FLAG)
-          continue
+            renderCell({i: cellI,j:cellJ}, FLAG)
+            continue;
       }
       renderCell({i: cellI,j:cellJ}, '')
       var cellId = [cellI,cellJ]
@@ -390,8 +389,7 @@ function revealAllMines() { //when game is over (lost), all mines reveal
 }
 
 function openTimer (){
-    //gStartTime = Date.now()
     gIsTimeStarted = true
     gStartTime = Date.now()
-    gInterval = setInterval(startTimer,1)
+    gInterval = setInterval(updateTime,1)
 }
