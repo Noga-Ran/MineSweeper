@@ -183,9 +183,6 @@ function setDifficulty(difficulty='easy') {
             
 function clearGame(){ //reset all vars
 
-    //gLevel.isMenually= false
-    //gStartTime = Date.now()
-    
     gPressManually = 0
     var elGamer = document.querySelector(`.gamer`)
     elGamer.innerHTML = ALIVE
@@ -209,6 +206,7 @@ function clearGame(){ //reset all vars
     clearInterval(gInterval)
     gGame.markedCount = 0
     gGame.shownCount = 0
+    gGame.secsPassed = 0
     gMineCount = 0;
     
     gIsTimeStarted=false
@@ -398,5 +396,5 @@ function revealAllMines() { //when game is over (lost), all mines reveal
 function openTimer (){
     gIsTimeStarted = true
     gStartTime = Date.now()
-    gInterval = setInterval(updateTime,1)
+    gInterval = setInterval(updateTime,10)
 }
