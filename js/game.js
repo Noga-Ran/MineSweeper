@@ -47,16 +47,18 @@ function initGame() {
 function cellClicked(i,j) {
     
     if(gLevel.isMenually) { 
-        if(gMineCount<gLevel.MINES){  //every cell the user click on will turn to mine while the number mines on the board is smaller then the number in Glevel.mines
-            if(gBoard[i][j].isMime) return //if the cell already have mine, nothing happen
+        if(gBoard[i][j].isMime) return //if the cell already have mine, nothing happen
+        
+        var leftToAdd = gLevel.MINES-gMineCount-1 //will tell the user how left to add
+        var elMenuallyBtn = document.getElementById("menuallyBtn")
+        elMenuallyBtn.innerHTML = `${leftToAdd}`
+        
+        addMines(gBoard,{i,j})
+        gMineCount++
+
+
+        if(gMineCount>=gLevel.MINES){  //every cell the user click on will turn to mine while the number mines on the board is smaller then the number in Glevel.mines
             
-            var leftToAdd = gLevel.MINES-gMineCount-1 //will tell the user how left to add
-
-            console.log('need to add more',leftToAdd,'mines'); //change to a html element
-
-            addMines(gBoard,{i,j})
-            gMineCount++
-        } else { //when there no mines left to add, it sent to function that add minesCount to mines neighbors
             setMinesNegsCount(gBoard)
             gLevel.isMenually = false; //turn to false, so that game will start
             gPressManually = 1 
@@ -211,6 +213,8 @@ function clearGame(){ //reset all vars
     elSafeClick.innerHTML = `safe click:<br>${gSafeClick} available`
     var elTimer = document.querySelector('.timer')
     elTimer=0
+    var elMenuallyBtn = document.getElementById("menuallyBtn")
+    elMenuallyBtn.innerHTML = 'Menually'
 }
 
 function isWon(){ //checks winning. stop game if true.
