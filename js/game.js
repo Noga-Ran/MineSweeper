@@ -132,6 +132,7 @@ function setDifficulty(difficulty='easy') {
             gLevel.MINES = 2;
             gLevel.LIFE = 1;
             gLevel.isMenually = false
+            gLevel.isSevenBoom = false;
             gLives = 1;
             gFlags=2;
             break;
@@ -141,6 +142,7 @@ function setDifficulty(difficulty='easy') {
             gLevel.MINES = 12;
             gLevel.LIFE = 3;
             gLevel.isMenually = false
+            gLevel.isSevenBoom = false;
             gLives = 3;
             gFlags = 12;
             break;
@@ -150,6 +152,7 @@ function setDifficulty(difficulty='easy') {
             gLevel.MINES = 30;
             gLevel.LIFE = 3;
             gLevel.isMenually = false
+            gLevel.isSevenBoom = false;
             gLives = 3;
             gFlags = 30;
             break;
@@ -159,6 +162,7 @@ function setDifficulty(difficulty='easy') {
             gLevel.MINES = 12;
             gLevel.LIFE = 3;
             gLevel.isMenually = true
+            gLevel.isSevenBoom = false;
             gLives = 3;
             gFlags = 12;
             break;
@@ -241,7 +245,6 @@ function gameOver() { //stop game when games lost
     elGamer.innerHTML = DEAD
     playSound('lose')
     clearInterval(gInterval) //stop timer
-    console.log('Game Over'); //change later to a pop up window
 }
 
 function addFlag(i,j) {

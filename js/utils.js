@@ -38,13 +38,11 @@ function addMines(board,loaction) {
   }
   else { //every cell that have a number that divided by seven, will be mine
     var cellcount=0
-
     for (var i = 0; i < board.length; i++) {
       for (var j = 0; j < board[0].length; j++) {
           var cell = board[i][j]
           //var elCell = document.querySelector(`.`)
           if(!cell.isMime && !cell.isShown && cellcount%7===0 && cellcount!==0 && cellcount!==1) {
-            console.log(cellcount);
             cell.isMime=true
           }
           cellcount++
@@ -92,7 +90,7 @@ function findMimes(board) { //find all the mines in the board
 
 function renderBoard(board) {
   var strHTML = '';
-  
+
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>';
 
